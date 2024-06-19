@@ -47,12 +47,12 @@ fn updateRocket(rocket: *Rocket) void {
 }
 
 fn createAsteroid() Asteroid {
-    const px = rl.getRandomValue(60, SCREEN_WIDTH - 60);
-    const size: f32 = @floatFromInt(rl.getRandomValue(30, 100));
+    const size = rl.getRandomValue(30, 100);
+    const px = rl.getRandomValue(size, SCREEN_WIDTH - size);
 
     return Asteroid{
-        .width = size,
-        .height = size,
+        .width = @floatFromInt(size),
+        .height = @floatFromInt(size),
         .theta = 0.0,
         .angular_velocity = 1.0,
         .velocity = rl.Vector2.init(0.0, 1.5),
