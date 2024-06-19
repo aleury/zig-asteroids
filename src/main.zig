@@ -65,32 +65,24 @@ fn updateAsteroid(asteroid: *Asteroid, dt: f32) void {
     asteroid.position = asteroid.position.add(asteroid.velocity);
 }
 
-fn drawTriangle(v1: rl.Vector2, v2: rl.Vector2, v3: rl.Vector2, color: rl.Color) void {
-    rl.drawTriangleLines(v1, v2, v3, color);
+fn drawTriangle(position: rl.Vector2, theta: f32, width: f32, height: f32, color: rl.Color) void {
+    const v1 = rl.Vector2{ .x = 0, .y = -height / 2 };
+    const v2 = rl.Vector2{ .x = -width / 2, .y = height / 2 };
+    const v3 = rl.Vector2{ .x = width / 2, .y = height / 2 };
+    rl.drawTriangleLines(
+        v1.rotate(theta).add(position),
+        v2.rotate(theta).add(position),
+        v3.rotate(theta).add(position),
+        color,
+    );
 }
 
 fn drawRocket(rocket: Rocket) void {
-    const v1 = rl.Vector2{ .x = 0, .y = -rocket.height / 2 };
-    const v2 = rl.Vector2{ .x = -rocket.width / 2, .y = rocket.height / 2 };
-    const v3 = rl.Vector2{ .x = rocket.width / 2, .y = rocket.height / 2 };
-    drawTriangle(
-        v1.rotate(rocket.theta).add(rocket.position),
-        v2.rotate(rocket.theta).add(rocket.position),
-        v3.rotate(rocket.theta).add(rocket.position),
-        rl.Color.ray_white,
-    );
+    drawTriangle(rocket.position, rocket.theta, rocket.width, rocket.height, rl.Color.ray_white);
 }
 
 fn drawAsteroid(asteroid: Asteroid) void {
-    const v1 = rl.Vector2{ .x = 0, .y = -asteroid.height / 2 };
-    const v2 = rl.Vector2{ .x = -asteroid.width / 2, .y = asteroid.height / 2 };
-    const v3 = rl.Vector2{ .x = asteroid.width / 2, .y = asteroid.height / 2 };
-    drawTriangle(
-        v1.rotate(asteroid.theta).add(asteroid.position),
-        v2.rotate(asteroid.theta).add(asteroid.position),
-        v3.rotate(asteroid.theta).add(asteroid.position),
-        rl.Color.ray_white,
-    );
+    drawTriangle(asteroid.position, asteroid.theta, asteroid.width, asteroid.height, rl.Color.ray_white);
 }
 
 pub fn main() !void {
@@ -122,8 +114,8 @@ pub fn main() !void {
         // spawn asteroids
         asteroid_timer.tick(dt);
         if (asteroid_timer.done()) {
-            try asteroids.append(createAsteroid());
             asteroid_timer.reset();
+            try asteroids.append(createAsteroid());
         }
 
         // handle input
