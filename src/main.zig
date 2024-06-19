@@ -103,7 +103,6 @@ pub fn main() !void {
     };
 
     // Setup asteroids collection
-    // var asteroid_timer: f32 = 0.0;
     var asteroid_timer = Timer.init(2.0);
     var asteroids = std.ArrayList(Asteroid).init(gpa.allocator());
     defer asteroids.deinit();
